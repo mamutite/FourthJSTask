@@ -3,7 +3,6 @@ import { WeatherData } from "../interfaces/weatherData";
 export async function fetchWeatherForecast(
   coords: google.maps.LatLng
 ): Promise<WeatherData[]> {
-  console.log(coords);
   const response = await fetch(
     `https://api.openweathermap.org/data/2.5/forecast?lat=${coords.lat()}&lon=${coords.lng()}&appid=${
       process.env.REACT_APP_WEATHER_API_KEY
@@ -13,6 +12,7 @@ export async function fetchWeatherForecast(
   return res.list.map(
     (element: any) =>
       ({
+        date: new Date(element.dt_txt),
         temp: element.main.temp,
         feelsLikeTemp: element.main.feels_like,
         weatherType: element.weather[0].main,

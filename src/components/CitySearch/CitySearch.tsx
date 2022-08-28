@@ -1,11 +1,10 @@
 import { fetchWeatherForecast } from "../../services/fetchWeatherForecast";
-import { PlaceResultI } from "./interfaces/PlaceResult";
 import { usePlacesWidget } from "react-google-autocomplete";
 import { TextField } from "@mui/material";
-
-import "./CitySearch.css";
 import { getCoords } from "../../utils/parseCityToCords";
 import { WeatherData } from "../../interfaces/weatherData";
+
+import "./CitySearch.css";
 
 interface CitySearchProps {
   handleLocationChange: (data: WeatherData[]) => void;
