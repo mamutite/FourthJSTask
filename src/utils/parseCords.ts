@@ -20,3 +20,17 @@ export function getCoords(city: string): Promise<google.maps.LatLng> {
     }
   );
 }
+
+export function getLocationFromCoords(coords: google.maps.LatLng): Promise<string> {
+  return Geocode.fromLatLng(coords.lat() + "", coords.lng() + "").then(
+    (response) => {
+      const address: string = response.results[0].formatted_address;
+      const parsedLocation = address.split(", ").slice(-2).join(", ");
+      return parsedLocation;
+    },
+    (error) => {
+      console.error(error);
+      return "";
+    }
+  );
+}

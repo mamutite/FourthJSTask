@@ -1,7 +1,7 @@
 import { fetchWeatherForecast } from "../../services/fetchWeatherForecast";
 import { usePlacesWidget } from "react-google-autocomplete";
 import { TextField } from "@mui/material";
-import { getCoords } from "../../utils/parseCityToCords";
+import { getCoords } from "../../utils/parseCords";
 import { WeatherData } from "../../interfaces/weatherData";
 
 import "./CitySearch.css";
@@ -32,7 +32,7 @@ function CitySearch(props: CitySearchProps) {
   }
 
   return (
-    <div style={{ width: "250px", marginTop: "20px" }}>
+    <div style={{ width: "100%", marginTop: "3rem" }}>
       <TextField
         fullWidth
         color="secondary"

@@ -1,6 +1,8 @@
 import { Button } from "@mui/material";
+import { useState } from "react";
 import { WeatherData } from "../../interfaces/weatherData";
 import { fetchWeatherForecast } from "../../services/fetchWeatherForecast";
+import { getLocationFromCoords } from "../../utils/parseCords";
 import "./CurrentLocation.css";
 
 interface CurrentLocationProps {
@@ -8,6 +10,7 @@ interface CurrentLocationProps {
 }
 
 function CurrentLocation(props: CurrentLocationProps) {
+  const [currentLocation, setCurrentLocation] = useState<string>();
   const { handleLocationChange } = props;
 
   function getLocation() {
@@ -16,12 +19,15 @@ function CurrentLocation(props: CurrentLocationProps) {
         (position: GeolocationPosition) => {
           const lat = position.coords.latitude;
           const lng = position.coords.longitude;
+          const coords = new google.maps.LatLng(lat, lng);
 
-          fetchWeatherForecast(new google.maps.LatLng(lat, lng)).then(
-            (data: WeatherData[]) => {
-              handleLocationChange(data);
-            }
+          getLocationFromCoords(coords).then((location) =>
+            setCurrentLocation(location)
           );
+
+          fetchWeatherForecast(coords).then((data: WeatherData[]) => {
+            handleLocationChange(data);
+          });
         },
         () => {
           console.log("Unable to get location");
@@ -31,10 +37,13 @@ function CurrentLocation(props: CurrentLocationProps) {
   }
 
   return (
-    <div className="current-location">
-      <Button onClick={getLocation} variant="outlined" color="secondary">
-        Get location
+    <div className="current-location__container">
+      <Button onClick={getLocation} variant="outlined" color="primary">
+        Get Current Location Weather
       </Button>
+      {currentLocation && (
+        <div className="location">Your current location: {currentLocation}</div>
+      )}
     </div>
   );
 }

@@ -26,10 +26,10 @@ function parseDataForDay(data: WeatherData[]): WeatherData {
   });
 
   res.weatherType = findMostOftenWeatherType(data);
-  res.temp = Math.round(res.temp / timestamps);
+  res.temp = res.temp / timestamps;
   res.rain = +(res.rain / timestamps);
-  res.clouds = Math.round(res.clouds / timestamps);
-  res.feelsLikeTemp = Math.round(res.feelsLikeTemp / timestamps);
+  res.clouds = res.clouds / timestamps;
+  res.feelsLikeTemp = res.feelsLikeTemp / timestamps;
 
   return res;
 }
