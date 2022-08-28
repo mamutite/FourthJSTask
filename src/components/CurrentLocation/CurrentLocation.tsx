@@ -1,20 +1,27 @@
+import { Button } from "@mui/material";
+import { WeatherData } from "../../interfaces/weatherData";
+import { fetchWeatherForecast } from "../../services/fetchWeatherForecast";
 import "./CurrentLocation.css";
 
-function CurrentLocation() {
+interface CurrentLocationProps {
+  handleLocationChange: (data: WeatherData[]) => void;
+}
+
+function CurrentLocation(props: CurrentLocationProps) {
+  const { handleLocationChange } = props;
+
   function getLocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position: GeolocationPosition) => {
           const lat = position.coords.latitude;
-          const lon = position.coords.longitude;
+          const lng = position.coords.longitude;
 
-          fetch(
-            `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&appid=${process.env.REACT_APP_WEATHER_API_KEY}&units=metric`
-          )
-            .then((res) => res.json())
-            .then((result) => {
-              console.log(result);
-            });
+          fetchWeatherForecast(new google.maps.LatLng(lat, lng)).then(
+            (data: WeatherData[]) => {
+              handleLocationChange(data);
+            }
+          );
         },
         () => {
           console.log("Unable to get location");
@@ -25,7 +32,9 @@ function CurrentLocation() {
 
   return (
     <div className="current-location">
-      <button onClick={getLocation}>Get location</button>
+      <Button onClick={getLocation} variant="outlined" color="secondary">
+        Get location
+      </Button>
     </div>
   );
 }

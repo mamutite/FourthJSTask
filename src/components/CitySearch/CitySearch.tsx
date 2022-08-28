@@ -1,38 +1,45 @@
-import Autocomplete from "react-google-autocomplete";
+import { fetchWeatherForecast } from "../../services/fetchWeatherForecast";
+import { PlaceResultI } from "./interfaces/PlaceResult";
+import { usePlacesWidget } from "react-google-autocomplete";
+import { TextField } from "@mui/material";
 
 import "./CitySearch.css";
+import { getCoords } from "../../utils/parseCityToCords";
+import { WeatherData } from "../../interfaces/weatherData";
 
-interface AddressComponentI {
-  long_name: string;
-  short_name: string;
-  types: string[];
+interface CitySearchProps {
+  handleLocationChange: (data: WeatherData[]) => void;
 }
 
-interface PlaceResultI {
-  address_components: AddressComponentI[];
-  formatted_address: string;
-}
+function CitySearch(props: CitySearchProps) {
+  const { handleLocationChange } = props;
 
-function CitySearch() {
-  function handlePlaceSelected(place: PlaceResultI) {
-    console.log(place);
-    if (place === undefined) return;
-    const city = place.address_components[0].long_name;
-    fetch(
-      `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${process.env.REACT_APP_WEATHER_API_KEY}&units=metric`
-    )
-      .then((res) => res.json())
-      .then((result) => {
-        console.log(result);
-      });
+  const { ref: materialRef } = usePlacesWidget({
+    apiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+    onPlaceSelected: (place) => handlePlaceSelected(place),
+    language: "en",
+  });
+
+  function handlePlaceSelected(place: google.maps.places.PlaceResult) {
+    if (place && place.address_components) {
+      const city = place.address_components[0].long_name;
+
+      getCoords(city).then((coords: google.maps.LatLng) =>
+        fetchWeatherForecast(coords).then((data: WeatherData[]) => {
+          handleLocationChange(data);
+        })
+      );
+    }
   }
 
   return (
-    <div>
-      <Autocomplete
-        apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
-        lang="en"
-        onPlaceSelected={(place: any) => handlePlaceSelected(place)}
+    <div style={{ width: "250px", marginTop: "20px" }}>
+      <TextField
+        fullWidth
+        color="secondary"
+        variant="outlined"
+        inputRef={materialRef}
+        placeholder="Enter location"
       />
     </div>
   );

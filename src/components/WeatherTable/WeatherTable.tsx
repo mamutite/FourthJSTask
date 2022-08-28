@@ -16,6 +16,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 import "./WeatherTable.css";
+import { WeatherData } from "../../interfaces/weatherData";
 
 function createData(
   name: string,
@@ -118,18 +119,25 @@ const rows = [
   createData("Gingerbread", 356, 16.0, 49, 3.9, 1.5),
 ];
 
-function WeatherTable() {
+interface WeatherTableProps {
+  weatherData: WeatherData[];
+}
+
+function WeatherTable(props: WeatherTableProps) {
+  const { weatherData } = props;
+  console.log(weatherData);
+
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
         <TableHead>
           <TableRow>
             <TableCell />
-            <TableCell>Dessert (100g serving)</TableCell>
-            <TableCell align="right">Calories</TableCell>
-            <TableCell align="right">Fat&nbsp;(g)</TableCell>
-            <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-            <TableCell align="right">Protein&nbsp;(g)</TableCell>
+            <TableCell align="left">Date</TableCell>
+            <TableCell align="center">Max temperature</TableCell>
+            <TableCell align="center">Min temperature</TableCell>
+            <TableCell align="center">Propability of precipition</TableCell>
+            <TableCell align="center">Cloudiness</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
