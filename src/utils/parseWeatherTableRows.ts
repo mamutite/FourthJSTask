@@ -14,11 +14,10 @@ export function parseWeatherTableRows(data: WeatherData[]): WeatherData[] {
 }
 
 function parseDataForDay(data: WeatherData[]): WeatherData {
-  let res: WeatherData = data[0];
+  let res: WeatherData = { ...data[0] };
   const timestamps = data.length;
 
-  data.shift();
-  data.forEach((el) => {
+  data.slice(1).forEach((el) => {
     res.temp += el.temp;
     res.clouds += el.clouds;
     res.feelsLikeTemp += el.feelsLikeTemp;
