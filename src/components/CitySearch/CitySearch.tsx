@@ -1,13 +1,15 @@
 import { fetchWeatherForecast } from "../../services/fetchWeatherForecast";
 import { usePlacesWidget } from "react-google-autocomplete";
 import { TextField } from "@mui/material";
-import { getCoords } from "../../utils/parseCords";
+import {
+  getCityFromAddressComponents,
+} from "../../utils/parseCords";
 import { WeatherData } from "../../interfaces/weatherData";
 
 import "./CitySearch.css";
 
 interface CitySearchProps {
-  handleLocationChange: (data: WeatherData[]) => void;
+  handleLocationChange: (data: WeatherData[], newLocation: string) => void;
 }
 
 function CitySearch(props: CitySearchProps) {
@@ -20,14 +22,13 @@ function CitySearch(props: CitySearchProps) {
   });
 
   function handlePlaceSelected(place: google.maps.places.PlaceResult) {
-    if (place && place.address_components) {
-      const city = place.address_components[0].long_name;
+    if (place && place.formatted_address && place.geometry && place.geometry.location) {
+      const location = getCityFromAddressComponents(place);
+      const coords = place.geometry.location;
 
-      getCoords(city).then((coords: google.maps.LatLng) =>
-        fetchWeatherForecast(coords).then((data: WeatherData[]) => {
-          handleLocationChange(data);
-        })
-      );
+      fetchWeatherForecast(coords).then((data: WeatherData[]) => {
+        handleLocationChange(data, location);
+      })
     }
   }
 
@@ -35,7 +36,7 @@ function CitySearch(props: CitySearchProps) {
     <div style={{ width: "100%", marginTop: "3rem" }}>
       <TextField
         fullWidth
-        color="secondary"
+        color="primary"
         variant="outlined"
         inputRef={materialRef}
         placeholder="Enter location"

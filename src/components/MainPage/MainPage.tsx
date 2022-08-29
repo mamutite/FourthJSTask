@@ -8,16 +8,21 @@ import "./MainPage.css";
 
 function MainPage() {
   const [weatherData, setWeatherData] = useState<WeatherData[]>([]);
+  const [location, setLocation] = useState<string>("");
 
-  function handleLocationChange(data: WeatherData[]) {
+  function handleLocationChange(data: WeatherData[], newLocation: string) {
     setWeatherData(data);
+    setLocation(newLocation);
   }
 
   const weatherTable =
     weatherData.length > 0 ? (
-      <WeatherTable weatherData={weatherData} />
+      <WeatherTable weatherData={weatherData} location={location} />
     ) : (
-      <div>Please select a location!</div>
+      <div>
+        Please select a location in the search field or click the button for
+        current location weather!
+      </div>
     );
 
   return (
@@ -38,7 +43,7 @@ function MainPage() {
         </div>
       </div>
 
-      <div className="weather-table__container">{weatherTable}</div>
+      <div className="weather-table">{weatherTable}</div>
     </div>
   );
 }

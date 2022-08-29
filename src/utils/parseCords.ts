@@ -8,24 +8,12 @@ Geocode.setApiKey(
 
 Geocode.setLocationType("ROOFTOP");
 
-export function getCoords(city: string): Promise<google.maps.LatLng> {
-  return Geocode.fromAddress(city).then(
-    (response: any) => {
-      const { lat, lng } = response.results[0].geometry.location;
-      return new google.maps.LatLng(lat, lng);
-    },
-    (error: any) => {
-      console.error(error);
-      return new google.maps.LatLng(42.6808921, 23.254566);
-    }
-  );
-}
-
-export function getLocationFromCoords(coords: google.maps.LatLng): Promise<string> {
+export function getLocationFromCoords(
+  coords: google.maps.LatLng
+): Promise<string> {
   return Geocode.fromLatLng(coords.lat() + "", coords.lng() + "").then(
     (response) => {
-      const address: string = response.results[0].formatted_address;
-      const parsedLocation = address.split(", ").slice(-2).join(", ");
+      const parsedLocation = getCityFromAddressComponents(response.results[0]);
       return parsedLocation;
     },
     (error) => {
@@ -33,4 +21,29 @@ export function getLocationFromCoords(coords: google.maps.LatLng): Promise<strin
       return "";
     }
   );
+}
+
+export function getCityFromAddressComponents(
+  place: google.maps.places.PlaceResult
+): string {
+  let city, country;
+  for (
+    let i = 0;
+    place.address_components && i < place.address_components.length;
+    i++
+  ) {
+    const address = place.address_components;
+    for (let j = 0; j < address[i].types.length; j++) {
+      switch (address[i].types[j]) {
+        case "locality":
+          city = address[i].long_name;
+          break;
+        case "country":
+          country = address[i].long_name;
+          break;
+      }
+    }
+  }
+
+  return city + ", " + country;
 }

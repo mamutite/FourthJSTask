@@ -16,29 +16,33 @@ import "./WeatherTable.css";
 
 interface WeatherTableProps {
   weatherData: WeatherData[];
+  location: string;
 }
 function WeatherTable(props: WeatherTableProps) {
-  const { weatherData } = props;
+  const { weatherData, location } = props;
   const weatherRows = parseWeatherTableRows(weatherData);
   const collapsibleWeatherRows = separateWeatherDataByDay(weatherData);
 
   return (
-    <TableContainer component={Paper}>
-      <Table aria-label="collapsible table">
-        <TableHead>
-          <HeaderRow headerType={HeaderTypeEnum.Date} />
-        </TableHead>
-        <TableBody>
-          {weatherRows.map((row) => (
-            <WeatherTableRow
-              key={row.date.getDate()}
-              row={row}
-              collapsibleRows={collapsibleWeatherRows.get(row.date.getDate())}
-            />
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <div className="weather-table__container">
+      <div className="weather-data-location">Weather data for: {location}</div>
+      <TableContainer component={Paper}>
+        <Table aria-label="collapsible table">
+          <TableHead>
+            <HeaderRow headerType={HeaderTypeEnum.Date} />
+          </TableHead>
+          <TableBody>
+            {weatherRows.map((row) => (
+              <WeatherTableRow
+                key={row.date.getDate()}
+                row={row}
+                collapsibleRows={collapsibleWeatherRows.get(row.date.getDate())}
+              />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
   );
 }
 

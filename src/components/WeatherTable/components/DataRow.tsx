@@ -18,7 +18,7 @@ function DataRow(props: DataRowProps) {
       </TableCell>
     ) : (
       <TableCell component="th" scope="row" align="center">
-        {row.date.getHours() +
+        {(row.date.getHours() + "").padStart(2, "0") +
           ":" +
           (row.date.getMinutes() + "").padStart(2, "0")}
       </TableCell>
