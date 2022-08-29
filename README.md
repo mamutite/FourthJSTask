@@ -1,3 +1,9 @@
+# Future Improvements That Can Be Added
+
+1. Tests - I don't have a lot of experience in testing, as I am learning it still. That's why I decided to not include tests in this exercise.
+2. Better UI - For me the UX of the app is good enough, but I would make changes on the UI with more time.
+3. Loaders and Error Handling - The only changes on the UX that I think should be added is handling the loading and error states of the data requests.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
